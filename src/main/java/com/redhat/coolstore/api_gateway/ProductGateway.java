@@ -51,7 +51,7 @@ public class ProductGateway extends RouteBuilder {
         productFormatter.setUnmarshalType(Product.class);
 
 		restConfiguration()
-				.contextPath("/api").apiContextPath("/api-docs")
+				.contextPath("/services").apiContextPath("/services-docs")
 				.apiProperty("host", "")
 				.apiProperty("api.title", "CoolStore Gateway API")
 				.apiProperty("api.version", "1.0")

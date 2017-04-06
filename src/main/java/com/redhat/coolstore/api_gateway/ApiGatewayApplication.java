@@ -50,7 +50,7 @@ public class ApiGatewayApplication extends SpringBootServletInitializer {
     @Bean
     ServletRegistrationBean servletRegistrationBean() {
         ServletRegistrationBean servlet = new ServletRegistrationBean(
-                new CamelHttpTransportServlet(), "/api/*");
+                new CamelHttpTransportServlet(), "/services/*");
         servlet.setName("CamelServlet");
         return servlet;
     }

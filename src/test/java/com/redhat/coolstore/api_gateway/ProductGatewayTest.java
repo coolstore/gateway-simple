@@ -40,7 +40,7 @@ public class ProductGatewayTest {
 
    // @Test
     public void testSwaggerEndpoint() {
-        ResponseEntity<String> orderResponse = restTemplate.getForEntity("/api/api-docs", String.class);
+        ResponseEntity<String> orderResponse = restTemplate.getForEntity("/services/api-docs", String.class);
         assertThat(orderResponse.getStatusCodeValue(), equalTo(HttpStatus.SC_OK));
     }
 
@@ -66,12 +66,12 @@ public class ProductGatewayTest {
     	camelContext.getRouteDefinition("productRoute").adviceWith(camelContext, new AdviceWithRouteBuilder() {
 			@Override
 			public void configure() throws Exception {
-				interceptSendToEndpoint("http4://{{env:CATALOG_ENDPOINT:catalog:8080}}/api/products").skipSendToOriginalEndpoint().setBody(constant(productResponseStr));
-				interceptSendToEndpoint("http4://{{env:INVENTORY_ENDPOINT:inventory:8080}}/api/availability/*").skipSendToOriginalEndpoint().setBody(constant(inventoryResponseStr));
+				interceptSendToEndpoint("http4://{{env:CATALOG_ENDPOINT:catalog:8080}}/services/products").skipSendToOriginalEndpoint().setBody(constant(productResponseStr));
+				interceptSendToEndpoint("http4://{{env:INVENTORY_ENDPOINT:inventory:8080}}/services/availability/*").skipSendToOriginalEndpoint().setBody(constant(inventoryResponseStr));
 			}
 		});
 
-        ResponseEntity<String> orderResponse = restTemplate.getForEntity("/api/products", String.class);
+        ResponseEntity<String> orderResponse = restTemplate.getForEntity("/services/products", String.class);
         assertThat(orderResponse.getStatusCodeValue(), equalTo(HttpStatus.SC_OK));
         
         assertThat(notify.matches(10, TimeUnit.SECONDS), Matchers.is(true));
@@ -94,7 +94,7 @@ public class ProductGatewayTest {
 			}
 		});
 
-        ResponseEntity<String> orderResponse = restTemplate.getForEntity("/api/products", String.class);
+        ResponseEntity<String> orderResponse = restTemplate.getForEntity("/services/products", String.class);
         assertThat(orderResponse.getStatusCodeValue(), equalTo(HttpStatus.SC_SERVICE_UNAVAILABLE));
         
        

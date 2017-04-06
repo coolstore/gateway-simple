@@ -61,7 +61,7 @@ public class CartGatewayTest {
 		});
     	
     	Map<String, String> param = new HashMap<String, String>(); 
-        ResponseEntity<String> checkoutResponse = restTemplate.postForEntity("/api/cart/checkout/FOO",param, String.class);
+        ResponseEntity<String> checkoutResponse = restTemplate.postForEntity("/services/cart/checkout/FOO",param, String.class);
         assertThat(checkoutResponse.getStatusCodeValue(), equalTo(HttpStatus.SC_OK));
         
         //assertThat(notify.matches(30, TimeUnit.SECONDS), Matchers.is(true));
@@ -85,7 +85,7 @@ public class CartGatewayTest {
 		});
 
     	Map<String, String> param = new HashMap<String, String>(); 
-        ResponseEntity<String> checkoutResponse = restTemplate.postForEntity("/api/cart/checkout/FOO",param, String.class);
+        ResponseEntity<String> checkoutResponse = restTemplate.postForEntity("/services/cart/checkout/FOO",param, String.class);
         
         assertThat(checkoutResponse.getStatusCodeValue(), equalTo(HttpStatus.SC_SERVICE_UNAVAILABLE));
     }
@@ -109,7 +109,7 @@ public class CartGatewayTest {
 			}
 		});
     	
-    	ResponseEntity<String> checkoutResponse = restTemplate.getForEntity("/api/cart/FOO", String.class);
+    	ResponseEntity<String> checkoutResponse = restTemplate.getForEntity("/services/cart/FOO", String.class);
         assertThat(checkoutResponse.getStatusCodeValue(), equalTo(HttpStatus.SC_OK));
         
         //assertThat(notify.matches(30, TimeUnit.SECONDS), Matchers.is(true));
@@ -132,7 +132,7 @@ public class CartGatewayTest {
 			}
 		});
 
-    	ResponseEntity<String> checkoutResponse = restTemplate.getForEntity("/api/cart/FOO", String.class);
+    	ResponseEntity<String> checkoutResponse = restTemplate.getForEntity("/services/cart/FOO", String.class);
     	
         assertThat(checkoutResponse.getStatusCodeValue(), equalTo(HttpStatus.SC_SERVICE_UNAVAILABLE));
     }
