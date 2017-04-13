@@ -34,56 +34,49 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ProductGateway extends RouteBuilder {
-	private static final Logger LOG = LoggerFactory.getLogger(ProductGateway.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ProductGateway.class);
 
-	@Autowired
-	private Environment env;
-	
+    @Autowired
+    private Environment env;
+
     @Override
     public void configure() throws Exception {
-    	try {
-    		getContext().setTracing(Boolean.parseBoolean(env.getProperty("ENABLE_TRACER", "false")));	
-		} catch (Exception e) {
-			LOG.error("Failed to parse the ENABLE_TRACER value: {}", env.getProperty("ENABLE_TRACER", "false"));
-		}
+        try {
+            getContext().setTracing(Boolean.parseBoolean(env.getProperty("ENABLE_TRACER", "false")));
+        } catch (Exception e) {
+            LOG.error("Failed to parse the ENABLE_TRACER value: {}", env.getProperty("ENABLE_TRACER", "false"));
+        }
 
         JacksonDataFormat productFormatter = new ListJacksonDataFormat();
         productFormatter.setUnmarshalType(Product.class);
 
-		restConfiguration()
-				.contextPath("/services").apiContextPath("/services-docs")
-				.apiProperty("host", "")
-				.apiProperty("api.title", "CoolStore Gateway API")
-				.apiProperty("api.version", "1.0")
-				.component("servlet")
-				.bindingMode(RestBindingMode.json);
+        restConfiguration().contextPath("/services")
+                .apiContextPath("/services-docs")
+                .apiProperty("host", "")
+                .apiProperty("api.title", "CoolStore Gateway API")
+                .apiProperty("api.version", "1.0")
+                .component("servlet")
+                .bindingMode(RestBindingMode.json);
 
-		rest("/products").description("Access the CoolStore products and their availability")
-            .produces(MediaType.APPLICATION_JSON_VALUE)
-
-        .get("/").description("Retrieves the product catalog, including inventory availability").outType(Product.class)
-            .route().id("productRoute")
-                	.setBody(simple("null"))
-                	.removeHeaders("CamelHttp*")
-                	.recipientList(simple("http4://{{env:CATALOG_ENDPOINT:catalog:8080}}/api/catalog")).end()
-                	.unmarshal(productFormatter)
-	                .split(body()).parallelProcessing()
-	                .enrich("direct:inventory", new InventoryEnricher())
-	            .end()
-	            
-        .endRest();
+        rest("/products").description("Access the CoolStore products and their availability")
+                .produces(MediaType.APPLICATION_JSON_VALUE)
+            .get("/").description("Retrieves the product catalog, including inventory availability")
+                .outType(Product.class).route().id("productRoute").setBody(simple("null")).removeHeaders("CamelHttp*")
+                .recipientList(simple("http4://{{env:CATALOG_ENDPOINT:catalog:8080}}/services/products")).end()
+                .unmarshal(productFormatter).split(body()).parallelProcessing()
+                .enrich("direct:inventory", new InventoryEnricher())
+                .end()
+            .endRest();
 
         from("direct:inventory")
             .id("inventoryRoute")
-            .setHeader("itemId", simple("${body.itemId}"))            
-			.setBody(simple("null"))
-			.removeHeaders("CamelHttp*")
-			.recipientList(simple("http4://{{env:INVENTORY_ENDPOINT:inventory:8080}}/api/inventory/${header.itemId}")).end()
-            .setHeader("CamelJacksonUnmarshalType", simple(Inventory.class.getName()))
-            .unmarshal().json(JsonLibrary.Jackson, Inventory.class);
+            .setHeader("itemId", simple("${body.itemId}"))
+            .setBody(simple("null")).removeHeaders("CamelHttp*")
+            .recipientList(simple("http4://{{env:INVENTORY_ENDPOINT:inventory:8080}}/services/inventory/${header.itemId}"))
+            .end()
+        .setHeader("CamelJacksonUnmarshalType", simple(Inventory.class.getName())).unmarshal()
+        json(JsonLibrary.Jackson, Inventory.class);
 
-
-        
     }
 
     private class InventoryEnricher implements AggregationStrategy {
@@ -95,8 +88,8 @@ public class ProductGateway extends RouteBuilder {
             Inventory i = resource.getIn().getBody(Inventory.class);
             p.setAvailability(i);
             original.getOut().setBody(p);
-            log.info("------------------->"+p);
-            
+            log.info("------------------->" + p);
+
             return original;
 
         }

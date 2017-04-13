@@ -1,65 +1,67 @@
 package com.redhat.coolstore.api_gateway.model;
 
-public class Product  {
+public class Product {
 
-	public String itemId;
-	public String name;
-	public String desc;
-	public double price;
-	public Inventory availability;
+    public String itemId;
+    public String name;
+    public String desc;
+    public double price;
+    public Inventory availability;
 
-	public Product() {
+    public Product() {
 
-	}
-	public Product(String itemId, String name, String desc, double price, Inventory availability) {
-		this.itemId = itemId;
-		this.name = name;
-		this.desc = desc;
-		this.price = price;
-		this.availability = availability;
-	}
+    }
 
-	public Inventory getAvailability() {
-		return availability;
-	}
+    public Product(String itemId, String name, String desc, double price, Inventory availability) {
+        this.itemId = itemId;
+        this.name = name;
+        this.desc = desc;
+        this.price = price;
+        this.availability = availability;
+    }
 
-	public void setAvailability(Inventory availability) {
-		this.availability = availability;
-	}
+    public Inventory getAvailability() {
+        return availability;
+    }
 
-	public String getItemId() {
-		return itemId;
-	}
+    public void setAvailability(Inventory availability) {
+        this.availability = availability;
+    }
 
-	public void setItemId(String itemId) {
-		this.itemId = itemId;
-	}
+    public String getItemId() {
+        return itemId;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getDesc() {
-		return desc;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setDesc(String desc) {
-		this.desc = desc;
-	}
+    public String getDesc() {
+        return desc;
+    }
 
-	public double getPrice() {
-		return price;
-	}
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
 
-	public void setPrice(double price) {
-		this.price = price;
-	}
+    public double getPrice() {
+        return price;
+    }
 
-	public String toString() {
-		return ("Product toString: name:" + name + " id:" + itemId + " price:" + price + " desc:" + desc + " availability: " + getAvailability());
-	}
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public String toString() {
+        return ("Product toString: name:" + name + " id:" + itemId + " price:" + price + " desc:" + desc
+                + " availability: " + getAvailability());
+    }
 }
